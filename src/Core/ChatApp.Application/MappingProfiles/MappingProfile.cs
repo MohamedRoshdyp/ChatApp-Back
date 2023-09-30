@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChatApp.Application.Features.Message.Command.AddMessage;
+using ChatApp.Application.Features.Message.Query.GetAllMessages;
 using ChatApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ public class MappingProfile:Profile
     {
         //mapping Message
         CreateMap<Message, AddMessageDto>().ReverseMap();
-
+        CreateMap<Message, MessageReturnDto>().ReverseMap();
 
 
     }
