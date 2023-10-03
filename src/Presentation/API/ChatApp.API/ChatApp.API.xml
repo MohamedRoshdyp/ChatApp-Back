@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ChatApp.API</name>
+    </assembly>
+    <members>
+        <member name="M:ChatApp.API.Controllers.AccountsController.Register(ChatApp.Application.Features.Accounts.Command.Register.RegisterDto)">
+            <summary>
+            Take Data From Body
+            </summary>
+            <param name="registerDto"></param>
+            <returns>
+            Return Token-UserName-Email
+            </returns>
+            <remarks>
+            Roles:[1=Admin,2=Memeber]
+            //BaserURL+/api/register
+            </remarks>
+        </member>
+    </members>
+</doc>

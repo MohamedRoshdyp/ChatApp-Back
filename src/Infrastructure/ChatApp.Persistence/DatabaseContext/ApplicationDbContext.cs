@@ -1,4 +1,6 @@
 ﻿using ChatApp.Domain.Common;
+using ChatApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,14 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatApp.Persistence.DatabaseContext;
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<AppUser>
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        base.OnModelCreating(modelBuilder);
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -27,4 +30,5 @@ public class ApplicationDbContext : DbContext
         return base.SaveChangesAsync(cancellationToken);
     }
     public DbSet<ChatApp.Domain.Entities.Message> Messages { get; set; }
+    public DbSet<ChatApp.Domain.Entities.Photo> Photos { get; set; }
 }
