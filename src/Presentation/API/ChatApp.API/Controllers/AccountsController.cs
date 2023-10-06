@@ -1,7 +1,10 @@
 ﻿using ChatApp.Application.Features.Accounts.Command.CheckUserNameOrEmailExist;
-using ChatApp.Application.Features.Accounts.Command.GetCurrentUser;
 using ChatApp.Application.Features.Accounts.Command.Login;
 using ChatApp.Application.Features.Accounts.Command.Register;
+using ChatApp.Application.Features.Accounts.Queries.GetAllUsers;
+using ChatApp.Application.Features.Accounts.Queries.GetCurrentUser;
+using ChatApp.Application.Features.Accounts.Queries.GetUserByUserId;
+using ChatApp.Application.Features.Accounts.Queries.GetUserByUserName;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -125,6 +128,64 @@ public class AccountsController : BaseController
         }
         catch (Exception ex)
         {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("get-all-users")]
+    public async Task<ActionResult<MemberDto>> GetAllUsers(CancellationToken ct)
+    {
+        try
+        {
+            var users = await _mediator.Send(new GetAllUsersQuery(), ct);
+            if(users is not null)
+            {
+                return Ok(users);
+            }
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("get-user-by-userName/{userName}")]
+    public async Task<ActionResult<MemberDto>> GetUserByUserName(string userName,CancellationToken ct)
+    {
+        try
+        {
+            if(!string.IsNullOrEmpty(userName))
+            {
+                var user = await _mediator.Send(new GetUserByUserNameQuery(userName), ct);
+                if (user is not null) return Ok(user);
+                
+            }
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("get-user-by-userId/{userId}")]
+    public async Task<ActionResult<MemberDto>> GetUserByUserId(string userId, CancellationToken ct)
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var user = await _mediator.Send(new GetUserByUserIdQuery(userId), ct);
+                if (user is not null) return Ok(user);
+
+            }
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+
             return BadRequest(ex.Message);
         }
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatApp.Application.Features.Accounts.Command.GetCurrentUser;
+namespace ChatApp.Application.Features.Accounts.Queries.GetCurrentUser;
 public class UserReturnDto
 {
     public string UserId { get; set; } = string.Empty;

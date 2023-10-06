@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatApp.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json")]
+
 public class BaseController : ControllerBase
 {
     private readonly IMediator _mediator;

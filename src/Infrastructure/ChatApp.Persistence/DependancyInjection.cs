@@ -32,7 +32,7 @@ public static class DependancyInjection
         //Configure
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IMessageRepository, MessageRepository>();
-
+        services.AddScoped<IUserRepository, UserRepository>();
 
         //Configure Token
         services.AddScoped<ITokenServices, TokenServices>();
@@ -70,6 +70,7 @@ public static class DependancyInjection
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             await IdentitySeed.SeedUserAsync(userManager, roleManager);
+            
         }
     }
 }

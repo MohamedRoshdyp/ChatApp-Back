@@ -10,8 +10,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatApp.Application.Features.Accounts.Command.GetCurrentUser;
-public class GetCurrentUserQuery:IRequest<UserReturnDto>
+namespace ChatApp.Application.Features.Accounts.Queries.GetCurrentUser;
+public class GetCurrentUserQuery : IRequest<UserReturnDto>
 {
     class Handler : IRequestHandler<GetCurrentUserQuery, UserReturnDto>
     {
@@ -19,7 +19,7 @@ public class GetCurrentUserQuery:IRequest<UserReturnDto>
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenServices _token;
 
-        public Handler(IHttpContextAccessor httpContext,UserManager<AppUser> userManager,ITokenServices token)
+        public Handler(IHttpContextAccessor httpContext, UserManager<AppUser> userManager, ITokenServices token)
         {
             _httpContext = httpContext;
             _userManager = userManager;
@@ -30,10 +30,10 @@ public class GetCurrentUserQuery:IRequest<UserReturnDto>
             try
             {
                 var userName = _httpContext?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
-                if(userName is not null)
+                if (userName is not null)
                 {
 
-                var user = await _userManager.FindByNameAsync(userName);
+                    var user = await _userManager.FindByNameAsync(userName);
                     return new UserReturnDto()
                     {
                         Email = user.Email,
