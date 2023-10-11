@@ -4,6 +4,8 @@ using ChatApp.Application.Responses;
 using ChatApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +29,16 @@ public class LoginCommand:IRequest<BaseCommonResponse>
         private readonly IMapper _mapper;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenServices _tokenServices;
+        private readonly IConfiguration _config;
 
-        public Handler(UserManager<AppUser> userManager,RoleManager<IdentityRole> roleManager,IMapper mapper,SignInManager<AppUser> signInManager,ITokenServices tokenServices)
+        public Handler(UserManager<AppUser> userManager,RoleManager<IdentityRole> roleManager,IMapper mapper,SignInManager<AppUser> signInManager,ITokenServices tokenServices,IConfiguration config)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _signInManager = signInManager;
             _tokenServices = tokenServices;
+            _config = config;
         }
         public async Task<BaseCommonResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -42,7 +46,7 @@ public class LoginCommand:IRequest<BaseCommonResponse>
 
             try
             {
-                var user =await _userManager.FindByNameAsync(request.LoginDto.UserName);
+                var user =await _userManager.Users.Include(x=>x.Photos).FirstOrDefaultAsync(x=>x.UserName == request.LoginDto.UserName);
                 if(user is not null)
                 {
                     var result =await _signInManager.CheckPasswordSignInAsync(user, request.LoginDto.Password, false);
@@ -54,7 +58,8 @@ public class LoginCommand:IRequest<BaseCommonResponse>
                         {
                             userName = user.UserName,
                             email = user.Email,
-                            token = _tokenServices.CreateToken(user)
+                            token = _tokenServices.CreateToken(user),
+                            photoUrl = _config["ApiURL"] + user.Photos.FirstOrDefault(x=>x.IsMain && x.IsActive)?.Url
                         };
                         return res;
                     }

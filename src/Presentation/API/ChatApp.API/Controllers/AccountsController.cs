@@ -1,6 +1,10 @@
 ﻿using ChatApp.Application.Features.Accounts.Command.CheckUserNameOrEmailExist;
 using ChatApp.Application.Features.Accounts.Command.Login;
 using ChatApp.Application.Features.Accounts.Command.Register;
+using ChatApp.Application.Features.Accounts.Command.RemovePhoto;
+using ChatApp.Application.Features.Accounts.Command.SetMainPhoto;
+using ChatApp.Application.Features.Accounts.Command.UpdateCurrentMember;
+using ChatApp.Application.Features.Accounts.Command.UploadPhoto;
 using ChatApp.Application.Features.Accounts.Queries.GetAllUsers;
 using ChatApp.Application.Features.Accounts.Queries.GetCurrentUser;
 using ChatApp.Application.Features.Accounts.Queries.GetUserByUserId;
@@ -21,7 +25,7 @@ public class AccountsController : BaseController
     {
         _mediator = mediator;
     }
-
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
@@ -68,6 +72,8 @@ public class AccountsController : BaseController
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesDefaultResponseType]
+    [AllowAnonymous]
+
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
         try
@@ -95,7 +101,6 @@ public class AccountsController : BaseController
         }
     }
 
-    [Authorize]
     [HttpGet("get-current-user")]
     public async Task<ActionResult<UserReturnDto>> GetCurrentUser(CancellationToken ct)
     {
@@ -189,4 +194,97 @@ public class AccountsController : BaseController
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("update-current-member")]
+    public async Task<ActionResult<UpdateCurrentMemberDto>> UpdateCurrentMember([FromBody] UpdateCurrentMemberDto updateCurrentMemberDto)
+    {
+        try
+        {
+            var command = new UpdateCurrentMemberCommand(updateCurrentMemberDto);
+            var response =await _mediator.Send(command);
+            if (response.IsSuccess)
+            {
+                return Ok(response.Data);
+            }
+            return BadRequest(response.Errors);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    [HttpPost("upload-photo")]
+    public async Task<IActionResult> UploadPhoto(IFormFile file)
+    {
+        try
+        {
+            var command = new UploadPhotoCommand{ PhotoFile = file};
+            var response = await _mediator.Send(command);
+            if (response)
+                return Ok("Uploaded Successfully");
+            return BadRequest("Unable to upload photo");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Unable to upload photo {ex.Message}");
+
+        }
+    }
+    /// <summary>
+    /// This Endpoint Remove Member Photo 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// api/Accounts/remove-photo/5
+    /// </remarks>
+    [HttpDelete("remove-photo/{id}")]
+    public async Task<IActionResult> RemovePhoto(int id)
+    {
+        try
+        {
+            var command = new RemovePhotoCommand(id);
+            var response = await _mediator.Send(command);
+            if (response)
+                return Ok("Remove Photo Successfully");
+            return BadRequest("Unable to Remove photo");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Unable to Remove photo {ex.Message}");
+
+        }
+    }
+
+    /// <summary>
+    /// This End point Responsible for Set Main Photo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// URL:=> api/Accounts/set-main-photo/2
+    /// </remarks>
+    [HttpPut("set-main-photo/{id}")]
+    public async Task<IActionResult> SetMainPhoto(int id)
+    {
+        try
+        {
+            if (id > 0)
+            {
+                var command = new SetMainPhotoCommand(id);
+                var response = await _mediator.Send(command);
+                if (response)
+                    return Ok("assign successfully");
+
+            }
+            return NotFound($"This id {id} doesn't found");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }
