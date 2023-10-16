@@ -50,5 +50,24 @@
             URL:=> api/Accounts/set-main-photo/2
             </remarks>
         </member>
+        <member name="M:ChatApp.API.Controllers.LikesController.AddLike(System.String)">
+            <summary>
+            Add Like To List 
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+            <remarks>baseURL/api/Likes/add-like/{userName}</remarks>
+        </member>
+        <member name="M:ChatApp.API.Controllers.LikesController.GetUserLike(ChatApp.Application.Helper.LikesParams,System.Threading.CancellationToken)">
+            <summary>
+            Get User Likes From List 
+            </summary>
+            <param name="likesParams"></param>
+            <param name="ct"></param>
+            <returns></returns>
+            <remarks>
+            baseURL/api/Likes/get-user-like
+            </remarks>
+        </member>
     </members>
 </doc>

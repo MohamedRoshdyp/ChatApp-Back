@@ -33,6 +33,7 @@ public static class DependancyInjection
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
 
         //Configure Token
         services.AddScoped<ITokenServices, TokenServices>();
