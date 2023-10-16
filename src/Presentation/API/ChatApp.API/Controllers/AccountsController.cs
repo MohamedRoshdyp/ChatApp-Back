@@ -9,6 +9,7 @@ using ChatApp.Application.Features.Accounts.Queries.GetAllUsers;
 using ChatApp.Application.Features.Accounts.Queries.GetCurrentUser;
 using ChatApp.Application.Features.Accounts.Queries.GetUserByUserId;
 using ChatApp.Application.Features.Accounts.Queries.GetUserByUserName;
+using ChatApp.Application.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -74,7 +75,7 @@ public class AccountsController : BaseController
     [ProducesDefaultResponseType]
     [AllowAnonymous]
 
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+    public async Task<ActionResult<RegisterDto>> Register([FromBody] RegisterDto registerDto)
     {
         try
         {
@@ -136,15 +137,17 @@ public class AccountsController : BaseController
             return BadRequest(ex.Message);
         }
     }
-
+    
     [HttpGet("get-all-users")]
-    public async Task<ActionResult<MemberDto>> GetAllUsers(CancellationToken ct)
+    public async Task<ActionResult<MemberDto>> GetAllUsers([FromQuery]UserParams userParams,CancellationToken ct)
     {
         try
         {
-            var users = await _mediator.Send(new GetAllUsersQuery(), ct);
+            var users = await _mediator.Send(new GetAllUsersQuery(userParams), ct);
+
             if(users is not null)
             {
+                Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
                 return Ok(users);
             }
             return NotFound();
@@ -215,15 +218,26 @@ public class AccountsController : BaseController
         }
     }
 
+    /// <summary>
+    /// This Function Take File(Image) and Added To Photo Table 
+    /// api/Accounts/upload-photo
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns>
+    /// Object Of Photo Class
+    /// </returns>
+    /// <remarks>
+    /// Take From File 
+    /// </remarks>
     [HttpPost("upload-photo")]
-    public async Task<IActionResult> UploadPhoto(IFormFile file)
+    public async Task<ActionResult<PhotoDto>> UploadPhoto(IFormFile file)
     {
         try
         {
             var command = new UploadPhotoCommand{ PhotoFile = file};
             var response = await _mediator.Send(command);
-            if (response)
-                return Ok("Uploaded Successfully");
+            if (response is not null)
+                return Ok(response);
             return BadRequest("Unable to upload photo");
         }
         catch (Exception ex)

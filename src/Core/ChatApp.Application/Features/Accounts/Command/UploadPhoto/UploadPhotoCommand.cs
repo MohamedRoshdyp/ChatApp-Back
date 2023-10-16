@@ -1,4 +1,5 @@
-﻿using ChatApp.Application.Persistence.Contracts;
+﻿using ChatApp.Application.Features.Accounts.Queries.GetAllUsers;
+using ChatApp.Application.Persistence.Contracts;
 using ChatApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatApp.Application.Features.Accounts.Command.UploadPhoto;
-public class UploadPhotoCommand : IRequest<bool>
+public class UploadPhotoCommand : IRequest<PhotoDto>
 {
     public IFormFile PhotoFile { get; set; }
-    class Handler : IRequestHandler<UploadPhotoCommand, bool>
+    class Handler : IRequestHandler<UploadPhotoCommand, PhotoDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly IHttpContextAccessor _httpContext;
@@ -26,25 +27,24 @@ public class UploadPhotoCommand : IRequest<bool>
             _httpContext = httpContext;
             _userManager = userManager;
         }
-        public async Task<bool> Handle(UploadPhotoCommand request, CancellationToken cancellationToken)
+        public async Task<PhotoDto> Handle(UploadPhotoCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 if(request.PhotoFile is not null)
                 {
                      var result =  await _userRepository.UploadPhoto(request.PhotoFile, "User");
-                    if (result)
+                    if (result is not null)
                     {
-                        return true;
+                        return result;
                     }
-                    return false;
+                    return null;
                 }
-                return false;
+                return null;
             }
             catch (Exception)
             {
-                return false;
-                throw;
+                return null;
             }
         }
     }

@@ -17,6 +17,19 @@
             //BaserURL+/api/register
             </remarks>
         </member>
+        <member name="M:ChatApp.API.Controllers.AccountsController.UploadPhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            This Function Take File(Image) and Added To Photo Table 
+            api/Accounts/upload-photo
+            </summary>
+            <param name="file"></param>
+            <returns>
+            Object Of Photo Class
+            </returns>
+            <remarks>
+            Take From File 
+            </remarks>
+        </member>
         <member name="M:ChatApp.API.Controllers.AccountsController.RemovePhoto(System.Int32)">
             <summary>
             This Endpoint Remove Member Photo 

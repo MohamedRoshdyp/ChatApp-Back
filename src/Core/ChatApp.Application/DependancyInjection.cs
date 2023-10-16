@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ChatApp.Application.Helper;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ public static class DependancyInjection
         //Configure MediatR
         services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
+        services.AddScoped<LogUserActivity>();
 
 
         return services;

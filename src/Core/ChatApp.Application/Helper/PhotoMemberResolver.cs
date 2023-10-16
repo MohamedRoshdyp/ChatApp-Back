@@ -20,6 +20,6 @@ public class PhotoMemberResolver:IValueResolver<AppUser,MemberDto, string>
 
     public string Resolve(AppUser source, MemberDto destination, string destMember, ResolutionContext context)
     {
-        return _config["ApiURL"] + source.Photos.FirstOrDefault(x=>x.IsMain && x.IsActive)?.Url;
+        return _config["ApiURL"] + source?.Photos?.FirstOrDefault(x=>x.IsMain && x.IsActive)?.Url;
     }
 }
