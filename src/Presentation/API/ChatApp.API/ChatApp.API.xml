@@ -69,5 +69,48 @@
             baseURL/api/Likes/get-user-like
             </remarks>
         </member>
+        <member name="M:ChatApp.API.Controllers.MessagesController.AddMessage(ChatApp.Application.Features.Message.Command.AddMessage.AddMessageDto,System.Threading.CancellationToken)">
+            <summary>
+            Add New Message 
+            </summary>
+            <param name="addMessageDto"></param>
+            <param name="ct"></param>
+            <returns></returns>
+            <remarks>
+            baseURL+api/Messages/add-message
+            </remarks>
+        </member>
+        <member name="M:ChatApp.API.Controllers.MessagesController.GetMessageForUser(ChatApp.Application.Helper.MessageParams,System.Threading.CancellationToken)">
+            <summary>
+            Get All Message For Current User
+            </summary>
+            <param name="messageParams"></param>
+            <param name="ct"></param>
+            <returns></returns>
+            <remarks>
+            baseURL+api/Messages/get-message-for-user
+            </remarks>
+        </member>
+        <member name="M:ChatApp.API.Controllers.MessagesController.GetMessageRead(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get All Message That Read By Using Recipient UserName
+            </summary>
+            <param name="userName"></param>
+            <param name="ct"></param>
+            <returns></returns>
+            <remarks>
+            baseURL+api/Messages/get-message-read/ali
+            </remarks>
+        </member>
+        <member name="M:ChatApp.API.Controllers.MessagesController.DeleteMessage(System.Int32)">
+            <summary>
+            Delete Message When Two point are the same status in Deleted
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <remarks> 
+            baseURL+api/Messages/delete-message/1
+            </remarks>
+        </member>
     </members>
 </doc>

@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 namespace ChatApp.Domain.Entities;
 public class Message : BaseEntity
 {
-    public int SenderId { get; set; }
+    public string? SenderId { get; set; }
     public string SenderUserName { get; set; } = string.Empty;
+    public AppUser Sender { get; set; }
 
-    public int RecipientId { get; set; }
+    public string? RecipientId { get; set; }
     public string RecipientUserName { get; set; } = string.Empty;
+    public AppUser Recipient { get; set; }
 
     public string Content { get; set; } = string.Empty;
 

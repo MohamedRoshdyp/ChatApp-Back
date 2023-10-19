@@ -13,6 +13,8 @@ public sealed class AppUser:IdentityUser
         Photos = new HashSet<Photo>();
         LikeUser = new HashSet<UserLike>();
         LikedByUser = new HashSet<UserLike>();
+        MessageSend = new HashSet<Message>();
+        MessageRecived = new HashSet<Message>();
     }
     public DateTime DateOfBirth { get; set; }
     public string KnownAs { get; set; } = string.Empty;
@@ -25,6 +27,14 @@ public sealed class AppUser:IdentityUser
     public string City { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
     public ICollection<Photo> Photos { get; set; }
+
+    //like
     public ICollection <UserLike> LikeUser { get; set; }
     public ICollection <UserLike> LikedByUser { get; set; }
+
+
+    //message
+    public ICollection<Message> MessageSend { get; set; }
+    public ICollection<Message> MessageRecived { get; set; }
+
 }

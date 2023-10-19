@@ -18,6 +18,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
+
+        //like
         modelBuilder.Entity<UserLike>()
             .HasKey(k => new { k.SourceUserId, k.LikedUserId });
         modelBuilder.Entity<UserLike>()
@@ -29,6 +31,15 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
             .HasOne(x => x.LikedUser)
             .WithMany(x => x.LikedByUser)
             .HasForeignKey(x => x.LikedUserId);
+
+        //message
+        modelBuilder.Entity<Message>()
+        .HasOne(x => x.Recipient)
+        .WithMany(x => x.MessageRecived);
+
+        modelBuilder.Entity<Message>()
+       .HasOne(x => x.Sender)
+       .WithMany(x => x.MessageSend);
 
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

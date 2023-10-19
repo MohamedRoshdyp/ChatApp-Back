@@ -15,6 +15,9 @@ public class MessageValidator:AbstractValidator<AddMessageDto>
             .NotEmpty().WithMessage("{PropertyName} is not null")
             .MinimumLength(3).WithMessage("{PropertyName} Min Length {PropertyValue}");
 
+        RuleFor(r => r.RecipientUserName)
+            .NotEmpty().WithMessage("{PropertyName} required !");
+
 
     }
 }
