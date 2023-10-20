@@ -26,6 +26,15 @@ public class AccountsController : BaseController
     {
         _mediator = mediator;
     }
+
+    /// <summary>
+    /// Login with username and password to start chatting
+    /// </summary>
+    /// <param name="loginDto"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// baseURL+Accounts/login
+    /// </remarks>
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -137,7 +146,8 @@ public class AccountsController : BaseController
             return BadRequest(ex.Message);
         }
     }
-    
+
+
     [HttpGet("get-all-users")]
     public async Task<ActionResult<MemberDto>> GetAllUsers([FromQuery]UserParams userParams,CancellationToken ct)
     {
@@ -158,6 +168,8 @@ public class AccountsController : BaseController
             return BadRequest(ex.Message);
         }
     }
+
+    //[Authorize(Roles ="Member")]
     [HttpGet("get-user-by-userName/{userName}")]
     public async Task<ActionResult<MemberDto>> GetUserByUserName(string userName,CancellationToken ct)
     {

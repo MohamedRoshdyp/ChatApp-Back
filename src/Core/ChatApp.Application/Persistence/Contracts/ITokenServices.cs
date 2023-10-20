@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 namespace ChatApp.Application.Persistence.Contracts;
 public interface ITokenServices
 {
-    string CreateToken(AppUser user);
+    Task<string> CreateToken(AppUser user);
 }

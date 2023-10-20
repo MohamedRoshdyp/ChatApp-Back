@@ -1,5 +1,6 @@
 ﻿using ChatApp.Application.Persistence.Contracts;
 using ChatApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,20 +15,27 @@ namespace ChatApp.Persistence.Repositories;
 public class TokenServices : ITokenServices
 {
     private readonly IConfiguration _configuration;
+    private readonly UserManager<AppUser> _userManager;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
-    public TokenServices(IConfiguration configuration)
+    public TokenServices(IConfiguration configuration,UserManager<AppUser> userManager)
     {
         _configuration = configuration;
+        _userManager = userManager;
         _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
     }
-    public string CreateToken(AppUser user)
+    public async Task<string> CreateToken(AppUser user)
     {
         var claim = new List<Claim>()
         {
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.GivenName,user.UserName),
-            new Claim(JwtRegisteredClaimNames.NameId,user.Id)
+            new Claim(JwtRegisteredClaimNames.NameId,user.Id),
         };
+
+        var roles =await _userManager.GetRolesAsync(user);
+
+        claim.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
         var creds = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
         var tokenDescribtor = new SecurityTokenDescriptor()
         {

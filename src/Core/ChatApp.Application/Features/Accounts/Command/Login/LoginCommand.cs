@@ -58,7 +58,7 @@ public class LoginCommand:IRequest<BaseCommonResponse>
                         {
                             userName = user.UserName,
                             email = user.Email,
-                            token = _tokenServices.CreateToken(user),
+                            token =await _tokenServices.CreateToken(user),
                             photoUrl = _config["ApiURL"] + user.Photos.FirstOrDefault(x=>x.IsMain && x.IsActive)?.Url,
                             gender = user.Gender
                         };

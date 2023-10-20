@@ -39,7 +39,7 @@ public class GetCurrentUserQuery : IRequest<UserReturnDto>
                         Email = user.Email,
                         UserName = user.UserName,
                         UserId = user.Id,
-                        Token = _token.CreateToken(user)
+                        Token =await _token.CreateToken(user)
                     };
                 }
                 return null;

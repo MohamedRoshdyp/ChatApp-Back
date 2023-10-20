@@ -60,7 +60,18 @@ public class RegisterCommand:IRequest<BaseCommonResponse>
                 //    Gender = request.RegisterDto.Gender
                 //};
                 var response =  await _userManager.CreateAsync(user, request.RegisterDto.Password);
-               if(response.Succeeded == false)
+                var roleResponse = await _userManager.AddToRoleAsync(user, "Member");
+                if (roleResponse.Succeeded == false)
+                {
+                    foreach (var err in roleResponse.Errors)
+                    {
+                        res.Errors.Add($"{err.Code} - {err.Description}");
+                    }
+                    res.IsSuccess = false;
+                    res.Message = "badRequest";
+                    return res;
+                }
+                    if (response.Succeeded == false)
                 {
                     foreach (var err in response.Errors)
                     {
@@ -77,7 +88,7 @@ public class RegisterCommand:IRequest<BaseCommonResponse>
                     userName = user.UserName,
                     email = user.Email,
                     knownAs = user.KnownAs,
-                    token =  _tokenServices.CreateToken(user),
+                    token =await  _tokenServices.CreateToken(user),
                     photoUrl = user.Photos.FirstOrDefault(x=>x.IsMain)?.Url,
                     gender = user.Gender
                 };
