@@ -42,5 +42,8 @@ public class MappingProfile:Profile
 
              .ForMember(d => d.SenderProfileUrl, o => o.MapFrom(s => baserURL + s.Sender.Photos.FirstOrDefault(x => x.IsMain && x.IsActive).Url));
 
+        //convert datetime
+        CreateMap<DateTime, DateTime>().ConvertUsing(x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
+
     }
 }

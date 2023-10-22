@@ -74,7 +74,7 @@ public class MessageRepository : GenericRepository<Domain.Entities.Message>, IMe
         {
             foreach (var item in unReadMessage)
             {
-                item.DateRead = DateTime.Now;
+                item.DateRead = DateTime.UtcNow;
                 _context.Messages.Update(item);
                 _context.SaveChanges();
             }

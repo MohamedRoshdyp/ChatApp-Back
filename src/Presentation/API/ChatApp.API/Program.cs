@@ -1,3 +1,4 @@
+using ChatApp.API.SignalR;
 using ChatApp.Application;
 using ChatApp.Persistence;
 using Microsoft.OpenApi.Models;
@@ -12,6 +13,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -44,14 +46,20 @@ public class Program
         //Configure External Project(dll)
         builder.Services.ConfigureApplicationService();
         builder.Services.ConfigurePersistenceServices(builder.Configuration);
+        builder.Services.AddSignalR();
 
+        //configure PresenceTracker
+        builder.Services.AddSingleton<PresenceTracker>();
 
         //Enable Cors
         builder.Services.AddCors(opt =>
         {
             opt.AddPolicy("CorsPolicy", p =>
             {
-                p.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+                p.AllowAnyHeader()
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .WithOrigins("http://localhost:4200");
             });
         });
 
@@ -72,6 +80,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<PresenceHub>("hubs/presence");
+        app.MapHub<MessageHub>("hubs/message");
         ChatApp.Persistence.DependancyInjection.ConfigMiddleware(app);
         app.Run();
     }
